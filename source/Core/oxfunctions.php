@@ -202,6 +202,27 @@ function cmpart($a, $b)
     return ($a->cnt < $b->cnt) ? -1 : 1;
 }
 
+//if profiling is disabled
+//create emty functions for performance reasons
+if(defined("blDoProfile") && !blDoProfile ) {
+    if (!function_exists('startProfile')) {
+        /**
+         * Start profiling
+         *
+         * @param string $sProfileName name of profile
+         */
+        function startProfile($sProfileName){};
+    }
+    if (!function_exists('stopProfile')) {
+        /**
+         * Stop profiling
+         *
+         * @param string $sProfileName name of profile
+         */
+        function stopProfile($sProfileName){};
+    }
+}
+
 if (!function_exists('startProfile')) {
     /**
      * Start profiling

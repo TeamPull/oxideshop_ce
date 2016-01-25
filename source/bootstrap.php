@@ -45,6 +45,10 @@ registerComposerAutoload();
 
 //init config.inc.php file reader
 $oConfigFile = new ConfigFile(OX_BASE_PATH . "config.inc.php");
+
+// enable profiling only if debugging is enabled
+define('blDoProfile', (bool) $oConfigFile->getVar('iDebug'));
+
 Registry::set("oxConfigFile", $oConfigFile);
 
 registerModuleDependenciesAutoload();
