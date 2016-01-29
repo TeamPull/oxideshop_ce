@@ -882,7 +882,8 @@ class oxLang extends oxSuperCfg
             foreach ($aLangFiles as $sLangFile) {
 
                 if (file_exists($sLangFile) && is_readable($sLangFile)) {
-                    $aSeoReplaceChars = array();
+                    //$aSeoReplaceChars can be set in the langfile null indicates that there is no setting made
+					$aSeoReplaceChars = null;
                     include $sLangFile;
 
                     // including only (!) those, which has charset defined
