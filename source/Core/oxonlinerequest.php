@@ -92,12 +92,11 @@ class oxOnlineRequest
     private function _getClusterId()
     {
         $oConfig = oxRegistry::getConfig();
-        $sBaseShop = $oConfig->getBaseShopId();
-        $sClusterId = $oConfig->getShopConfVar('sClusterId', $sBaseShop);
+        $sClusterId = $oConfig->getSystemConfigParameter('sClusterId');
         if (!$sClusterId) {
             $oUUIDGenerator = oxNew('oxUniversallyUniqueIdGenerator');
             $sClusterId = $oUUIDGenerator->generate();
-            $oConfig->saveShopConfVar("str", 'sClusterId', $sClusterId, $sBaseShop);
+            $oConfig->saveSystemConfigParameter("str", 'sClusterId', $sClusterId);
         }
 
         return $sClusterId;
