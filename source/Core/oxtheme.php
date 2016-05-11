@@ -86,6 +86,8 @@ class oxTheme extends oxSuperCfg
             $this->getConfig()->saveShopConfVar("str", 'sTheme', $this->getId());
             $this->getConfig()->saveShopConfVar("str", 'sCustomTheme', '');
         }
+        $oSettingsHandler = oxNew('oxSettingsHandler');
+        $oSettingsHandler->setModuleType('theme')->run($this);
     }
 
     /**
