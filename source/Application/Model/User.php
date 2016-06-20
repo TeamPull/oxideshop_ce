@@ -547,18 +547,20 @@ class User extends \oxBase
      */
     public function allowDerivedUpdate()
     {
-        $allowUpdate = false;
-        if($this->getAuthId() != $this->getId()){
+       
+        
             $old = this->load($this->getId());
-            $oldShop = $old->oxuser__oxshopid->getValue();     
-            $newShop = $this->oxuser__oxshopid->getValue();
-            if($this->hasRights($oldShop) && $this->hasrights($newShop)){
-                 $allowUpdate = true;
-            }            
-        } else {
-            $allowUpdate = true;
-        }
-        return $allowUpdate;
+            // to update that user object the authorized user
+            // must have the following rights
+            $rightsNeeded = [                
+                $old->oxuser__oxshopid->getValue(), 
+                $this->oxuser__oxshopid->getValue(),
+                $old->oxuser__oxrights->getValue(),
+                $this->oxuser__oxrights->getValue()
+            ];
+            
+            return $this->hasRights($rightsNeeded);
+            
     }
 
     
@@ -697,6 +699,9 @@ class User extends \oxBase
         }
 
         return false;
+    }
+
+
     }
 
     /**
@@ -1567,6 +1572,7 @@ class User extends \oxBase
         $sAuthUserID = $sAuthUserID ? $sAuthUserID : oxRegistry::getSession()->getVariable('usr');
         return $sAuthUserID;
     }
+
     /**
      * Returns user rights index. Index cannot be higher than current session
      * user rights index.
@@ -1610,6 +1616,11 @@ class User extends \oxBase
 
         // leaving as it was set ...
         return $this->oxuser__oxrights->value;
+    }
+
+    public function hasRights($rightsNeeded)
+    {
+         
     }
 
     /**
