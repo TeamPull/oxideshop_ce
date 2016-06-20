@@ -547,8 +547,21 @@ class User extends \oxBase
      */
     public function allowDerivedUpdate()
     {
-        return true;
+        $allowUpdate = false;
+        if($this->getAuthId() != $this->getId()){
+            $old = this->load($this->getId());
+            $oldShop = $old->oxuser__oxshopid->getValue();     
+            $newShop = $this->oxuser__oxshopid->getValue();
+            if($this->hasRights($oldShop) && $this->hasrights($newShop)){
+                 $allowUpdate = true;
+            }            
+        } else {
+            $allowUpdate = true;
+        }
+        return $allowUpdate;
     }
+
+    
 
     /**
      * Checks if this object is in group, returns true on success.
@@ -1548,6 +1561,12 @@ class User extends \oxBase
         }
     }
 
+
+    protected function getAuthUserId(){
+        $sAuthUserID = $this->isAdmin() ? oxRegistry::getSession()->getVariable('auth') : null;
+        $sAuthUserID = $sAuthUserID ? $sAuthUserID : oxRegistry::getSession()->getVariable('usr');
+        return $sAuthUserID;
+    }
     /**
      * Returns user rights index. Index cannot be higher than current session
      * user rights index.
@@ -1566,8 +1585,7 @@ class User extends \oxBase
         $sAuthRights = null;
 
         // choosing possible user rights index
-        $sAuthUserID = $this->isAdmin() ? oxRegistry::getSession()->getVariable('auth') : null;
-        $sAuthUserID = $sAuthUserID ? $sAuthUserID : oxRegistry::getSession()->getVariable('usr');
+        $sAuthUserID = $this->getAuthUserId();
         if ($sAuthUserID) {
             $sAuthRights = $oDb->getOne('select oxrights from ' . $this->getViewName() . ' where oxid=' . $oDb->quote($sAuthUserID));
         }
