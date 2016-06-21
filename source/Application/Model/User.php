@@ -558,6 +558,8 @@ class User extends \oxBase
                 $old->oxuser__oxrights->getValue(),
                 $this->oxuser__oxrights->getValue()
             ];
+            if (!$this->getConfig()->getConfigParam('blMallUsers')) {
+            }
             
             return $this->hasRights($rightsNeeded);
             
