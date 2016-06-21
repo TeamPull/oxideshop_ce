@@ -546,23 +546,20 @@ class User extends \oxBase
      * @return bool
      */
     public function allowDerivedUpdate()
-    {
-       
-        
-            $old = this->load($this->getId());
-            // to update that user object the authorized user
-            // must have the following rights
-            $rightsNeeded = [                
-                $old->oxuser__oxshopid->getValue(), 
-                $this->oxuser__oxshopid->getValue(),
-                $old->oxuser__oxrights->getValue(),
-                $this->oxuser__oxrights->getValue()
-            ];
-            if (!$this->getConfig()->getConfigParam('blMallUsers')) {
-            }
+    {              
+        $old = this->load($this->getId());
+        // to update that user object the authorized user
+        // must have the following rights
+        $rightsNeeded = [                               
+            $old->oxuser__oxrights->getValue(),
+            $this->oxuser__oxrights->getValue()
+        ];
+        if (!$this->getConfig()->getConfigParam('blMallUsers')) {
+            $rightsNeeded[] = $old->oxuser__oxshopid->getValue();
+            $rightsNeeded[] = $this->oxuser__oxshopid->getValue();
+        }
             
-            return $this->hasRights($rightsNeeded);
-            
+        return $this->hasRights($rightsNeeded);            
     }
 
     
@@ -1569,10 +1566,22 @@ class User extends \oxBase
     }
 
 
-    protected function getAuthUserId(){
+    protected function getAuthUserId()
+    {
         $sAuthUserID = $this->isAdmin() ? oxRegistry::getSession()->getVariable('auth') : null;
         $sAuthUserID = $sAuthUserID ? $sAuthUserID : oxRegistry::getSession()->getVariable('usr');
         return $sAuthUserID;
+    }
+
+    protected function getAuthRights()
+    {
+        $sAuthUserID = $this->getAuthUserId();
+        $sAuthRights = null;
+        if ($sAuthUserID) {
+            $oDb = oxDb::getDb();
+            $sAuthRights = $oDb->getOne('select oxrights from ' . $this->getViewName() . ' where oxid=' . $oDb->quote($sAuthUserID));
+        };
+        return $sAuthRights;
     }
 
     /**
@@ -1590,13 +1599,10 @@ class User extends \oxBase
 
         $oDb = oxDb::getDb();
         $myConfig = $this->getConfig();
-        $sAuthRights = null;
+
 
         // choosing possible user rights index
-        $sAuthUserID = $this->getAuthUserId();
-        if ($sAuthUserID) {
-            $sAuthRights = $oDb->getOne('select oxrights from ' . $this->getViewName() . ' where oxid=' . $oDb->quote($sAuthUserID));
-        }
+        $sAuthRights = $this->getAuthRights();
 
         //preventing user rights edit for non admin
         $aRights = array();
@@ -1622,7 +1628,16 @@ class User extends \oxBase
 
     public function hasRights($rightsNeeded)
     {
-         
+         $sAuthRights = $this->getAuthRights();
+         if ($sAuthRights == 'malladmin') {
+             return true;
+         }
+         foreach($rightsNeeded as $right){
+             if ($right != 'user' && $right != $sAuthRights){
+                 return false;
+             }            
+         }
+         return true;
     }
 
     /**
