@@ -639,7 +639,7 @@ class Config extends SuperConfig
                 $this->setConfigParam($varName, $varVal);
                 break;
         }
-        $this->configValueCache[$varName] = [$varType, $varVal];
+        $this->configValueCache[$varName] = [$varVal, $varType];
     }
 
     /**
