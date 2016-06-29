@@ -496,7 +496,7 @@ class Price
      * @param array $aDiscount
      * @return float
      */
-    private function calculateDiscountMultiplicative($dPrice, $aDiscount)
+    private function calculateDiscountMultiplicative($dPrice, array $aDiscount)
     {
         if ($aDiscount['type'] == 'abs') {
             return (float) $dPrice - $aDiscount['value'];
