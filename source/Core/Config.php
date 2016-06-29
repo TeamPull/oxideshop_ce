@@ -312,6 +312,9 @@ class Config extends SuperConfig
     /** @var string Default configuration encryption key for database values. */
     protected $sConfigKey = self::DEFAULT_CONFIG_KEY;
 
+
+    protected $configValueCache = [];
+    
     /**
      * prefix for oxModule field for themes in oxConfig and oxConfigDisplay tables
      *
@@ -636,6 +639,7 @@ class Config extends SuperConfig
                 $this->setConfigParam($varName, $varVal);
                 break;
         }
+        $this->configValueCache[$varName] = [$varType, $varVal];
     }
 
     /**
@@ -1834,6 +1838,12 @@ class Config extends SuperConfig
         // Update value only for current shop
         if ($shopId == $this->getShopId()) {
             $this->setConfigParam($varName, $varVal);
+            if($this->configValueCache[$varName][0] === $varVal && $this->configValueCache[$varName][1] === $varType) {
+                //if the value and type is equal to the current value in the cache
+                //do not save it for performance reasons (especially on config imports, or when handling with large module/theme configurations)
+                return;
+            }
+            $this->configValueCache[$varName] = [$varVal, $varType];
         }
 
         $db = Database::getDb();
