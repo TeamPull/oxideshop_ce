@@ -452,23 +452,81 @@ class Price
     {
         $dPrice = $this->getPrice();
         $aDiscounts = $this->getDiscounts();
+        $calculateDiscountsMultiplicative = Registry::getConfig()->getConfigParam('calculateDiscountsMultiplicative');
 
         if ($aDiscounts) {
+            $sumOfCalculatedDiscounts = 0;
+
             foreach ($aDiscounts as $aDiscount) {
 
-                if ($aDiscount['type'] == 'abs') {
-                    $dPrice = $dPrice - $aDiscount['value'];
+                if ($calculateDiscountsMultiplicative) {
+                    $dPrice = $this->calculateDiscountMultiplicative($dPrice, $aDiscount);
                 } else {
-                    $dPrice = $dPrice * (100 - $aDiscount['value']) / 100;
+                    $sumOfCalculatedDiscounts += $this->calculateDiscountAdditive($dPrice, $aDiscount);
                 }
             }
+
+            if (!$calculateDiscountsMultiplicative) {
+                $dPrice -= $sumOfCalculatedDiscounts;
+            }
+
             if ($dPrice < 0) {
-                $this->setPrice(0);
+                $this->setPrice(0.0);
             } else {
                 $this->setPrice($dPrice);
             }
 
             $this->_flushDiscounts();
+        }
+    }
+
+    /**
+     * Helper method to calculate the discounts multiplicative. Means: Calculate the discount on the base price. If there
+     * is another discount, then calculate it from the new price:
+     *
+     *  100€    base price
+     * - 10%    first discount
+     * = 90€    sum after first discount
+     * - 10%    next discount, calculated on the subtotal
+     * = 81€    final discounted price
+     *
+     * Note that this also includes absolute discounts.
+     *
+     * @param float $dPrice
+     * @param array $aDiscount
+     * @return float
+     */
+    private function calculateDiscountMultiplicative($dPrice, $aDiscount)
+    {
+        if ($aDiscount['type'] == 'abs') {
+            return (float) $dPrice - $aDiscount['value'];
+        } else {
+            return (float) $dPrice * (100 - $aDiscount['value']) / 100;
+        }
+    }
+
+    /**
+     * Helper method to calculate the discounts additive. Means: Calculate the discount on the base price. If there
+     * is another discount, then calculate it also from the base price:
+     *
+     * 10% + 10% = 20%
+     *
+     *  100€    base price
+     * - 20%    all discounts summed up
+     * = 80€    final discounted price
+     *
+     * Note that this also includes absolute discounts.
+     *
+     * @param float $dPrice
+     * @param array $aDiscount
+     * @return float
+     */
+    private function calculateDiscountAdditive($dPrice, array $aDiscount)
+    {
+        if ($aDiscount['type'] == 'abs') {
+            return (float) $aDiscount['value'];
+        } else {
+            return (float) $dPrice - ($dPrice * (100 - $aDiscount['value']) / 100);
         }
     }
 }
