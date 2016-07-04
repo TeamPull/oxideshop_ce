@@ -505,6 +505,7 @@ INSERT INTO `oxconfig` (`OXID`, `OXSHOPID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`
 ('a7a425c02819f7253.64374401', 'oxbaseshop', '', 'blAutoIcons', 'bool', 0x07),
 ('7e9426025ff199d75.57820200', 'oxbaseshop', '', 'sStockWarningLimit', 'str', 0x07c4),
 ('9a8426df9d36443e7.48701626', 'oxbaseshop', '', 'blSearchUseAND', 'bool', ''),
+('9a8426df9d36443e7.48701627', 'oxbaseshop', '', 'blCalculateDiscountsMultiplicative', 'bool', 0x07),
 ('a99427345bf85a602.27736147', 'oxbaseshop', '', 'blDontShowEmptyCategories', 'bool', ''),
 ('a99427345bf8fcff2.83464949', 'oxbaseshop', '', 'bl_perfUseSelectlistPrice', 'bool', ''),
 ('a99427345bf9a27a1.04791092', 'oxbaseshop', '', 'bl_perfCalcVatOnlyForBasketOrder', 'bool', ''),

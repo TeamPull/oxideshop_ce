@@ -1065,6 +1065,7 @@ $aLang = array(
 'SHOP_CONFIG_UNASSIGNDEFAULTCAT'                           => 'Zuordnung löschen',
 'SHOP_CONFIG_ASSIGNEDDEFAULTCAT'                           => 'Aktive Kategorie beim Start:',
 'SHOP_CONFIG_ACTIVECATEGORYBYSTART'                        => 'Aktive Kategorie beim Start (Diese Kategorie wird in der Kategorien-Navigation "ausgeklappt" angezeigt)',
+'SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE'             => 'Rabatte werden multiplikativ berechnet.',
 'SHOP_CONFIG_AUTOSEARCHONCAT'                              => 'Die Suche automatisch starten, sobald der Kunde eine Kategorie ausgewählt hat',
 'SHOP_CONFIG_AUTOICONS'                                    => 'Icons automatisch generieren aus Thumbnail (kann u.U. das System stark verlangsamen)',
 'SHOP_CONFIG_ALLOWUNEVENAMOUNTS'                           => 'Nicht ganzzahlige Eingaben bei Artikelmengen erlauben (z.B. 1,5)',
