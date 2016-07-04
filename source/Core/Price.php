@@ -22,6 +22,7 @@
 
 namespace OxidEsales\Eshop\Core;
 
+use OxidEsales\Eshop\Application\Model\Discount;
 use oxRegistry;
 use oxPrice;
 
@@ -421,10 +422,32 @@ class Price
      *
      * @param double $dValue discount value
      * @param string $sType  discount type: abs or %
+     * @param int $sorting discount sorting
+     *
+     * @deprecated Use Price::addDiscount instead
      */
-    public function setDiscount($dValue, $sType)
+    public function setDiscount($dValue, $sType, $sorting = 0)
     {
-        $this->_aDiscounts[] = array('value' => $dValue, 'type' => $sType);
+        $this->_aDiscounts[] = array(
+            'value' => $dValue,
+            'type' => $sType,
+            'sort' => $sorting,
+        );
+    }
+
+    /**
+     * Sets discount to price
+     *
+     * @param Discount $discount
+     */
+    public function addDiscount(Discount $discount)
+    {
+        //map object to array to stay compatible
+        $this->_aDiscounts[] = array(
+            'value' => $discount->getAddSum(),
+            'type' => $discount->getAddSumType(),
+            'sort' => $discount->oxdiscounts__oxsort->value,
+        );
     }
 
     /**
@@ -434,7 +457,19 @@ class Price
      */
     public function getDiscounts()
     {
-        return $this->_aDiscounts;
+        $discounts = array();
+
+        if ($this->_aDiscounts) {
+            /** @var Discount $tmpDiscount */
+            foreach($this->_aDiscounts as $discount) {
+                $discounts[] = array(
+                    'value' => $discount->oxdiscount__oxaddsum->value,
+                    'type' => $discount->oxdiscount__oxaddsumtype->value,
+                    'sort' => $discount->oxdiscounts__oxsort->value,
+                );
+            }
+        }
+        return $discounts;
     }
 
     /**
@@ -445,24 +480,24 @@ class Price
         $this->_aDiscounts = null;
     }
 
-    /**
-     * Calculates price: affects discounts
-     */
     public function calculateDiscount()
     {
         $dPrice = $this->getPrice();
-        $aDiscounts = $this->getDiscounts();
         $calculateDiscountsMultiplicative = Registry::getConfig()->getConfigParam('calculateDiscountsMultiplicative');
 
-        if ($aDiscounts) {
-            $sumOfCalculatedDiscounts = 0;
+        if ($this->_aDiscounts) {
 
-            foreach ($aDiscounts as $aDiscount) {
+            if (!$calculateDiscountsMultiplicative) {
+                $sumOfCalculatedDiscounts = 0;
+            }
+
+            /** @var Discount $discount */
+            foreach ($this->_aDiscounts as $discount) {
 
                 if ($calculateDiscountsMultiplicative) {
-                    $dPrice = $this->calculateDiscountMultiplicative($dPrice, $aDiscount);
+                    $dPrice = $this->calculateDiscountMultiplicative($dPrice, $discount);
                 } else {
-                    $sumOfCalculatedDiscounts += $this->calculateDiscountAdditive($dPrice, $aDiscount);
+                    $sumOfCalculatedDiscounts += $this->calculateDiscountAdditive($dPrice, $discount);
                 }
             }
 
@@ -493,15 +528,15 @@ class Price
      * Note that this also includes absolute discounts.
      *
      * @param float $dPrice
-     * @param array $aDiscount
+     * @param array $discount
      * @return float
      */
-    private function calculateDiscountMultiplicative($dPrice, array $aDiscount)
+    private function calculateDiscountMultiplicative($dPrice, array $discount)
     {
-        if ($aDiscount['type'] == 'abs') {
-            return (float) $dPrice - $aDiscount['value'];
+        if ($discount['type'] == 'abs') {
+            return (float) $dPrice - $discount['value'];
         } else {
-            return (float) $dPrice * (100 - $aDiscount['value']) / 100;
+            return (float) $dPrice * (100 - $discount['value']) / 100;
         }
     }
 
@@ -518,15 +553,15 @@ class Price
      * Note that this also includes absolute discounts.
      *
      * @param float $dPrice
-     * @param array $aDiscount
+     * @param array $discount
      * @return float
      */
-    private function calculateDiscountAdditive($dPrice, array $aDiscount)
+    private function calculateDiscountAdditive($dPrice, array $discount)
     {
-        if ($aDiscount['type'] == 'abs') {
-            return (float) $aDiscount['value'];
+        if ($discount['type'] == 'abs') {
+            return (float) $discount['value'];
         } else {
-            return (float) $dPrice - ($dPrice * (100 - $aDiscount['value']) / 100);
+            return (float) $dPrice - ($dPrice * (100 - $discount['value']) / 100);
         }
     }
 }
