@@ -21,6 +21,7 @@
  */
 namespace Unit\Core;
 
+use OxidEsales\Eshop\Application\Model\Discount;
 use \oxPrice;
 
 class PriceTest extends \OxidTestCase
@@ -592,8 +593,8 @@ class PriceTest extends \OxidTestCase
         $price = oxNew('oxPrice');
         $price->setNettoPriceMode();
         $price->setPrice(100.0, 20);
-        $price->setDiscount(10.0, '%');
-        $price->setDiscount(10.0, '%');
+        $price->setDiscount(10.0, '%', 0);
+        $price->setDiscount(10.0, '%', 1);
         $price->calculateDiscount();
 
         $this->assertEquals(81.0, $price->getNettoPrice());
@@ -604,8 +605,8 @@ class PriceTest extends \OxidTestCase
         $price = oxNew('oxPrice');
         $price->setNettoPriceMode();
         $price->setPrice(100.0, 20);
-        $price->setDiscount(20.0, 'abs');
-        $price->setDiscount(10.0, '%');
+        $price->setDiscount(20.0, 'abs', 0);
+        $price->setDiscount(10.0, '%', 1);
         $price->calculateDiscount();
 
         $this->assertEquals(72.0, $price->getNettoPrice());
@@ -616,8 +617,8 @@ class PriceTest extends \OxidTestCase
         $price = oxNew('oxPrice');
         $price->setNettoPriceMode();
         $price->setPrice(100.0, 20);
-        $price->setDiscount(10.0, '%');
-        $price->setDiscount(20.0, 'abs');
+        $price->setDiscount(10.0, '%', 0);
+        $price->setDiscount(20.0, 'abs', 1);
         $price->calculateDiscount();
 
         $this->assertEquals(70.0, $price->getNettoPrice());
@@ -628,13 +629,44 @@ class PriceTest extends \OxidTestCase
         $price = oxNew('oxPrice');
         $price->setNettoPriceMode();
         $price->setPrice(100.0, 20);
-        $price->setDiscount(20.0, 'abs');
-        $price->setDiscount(10.0, 'abs');
+        $price->setDiscount(20.0, 'abs', 0);
+        $price->setDiscount(10.0, 'abs', 1);
         $price->calculateDiscount();
 
         $this->assertEquals(70.0, $price->getNettoPrice());
         $this->assertEquals(84.0, $price->getBruttoPrice());
         $this->assertEquals(14.0, $price->getVatValue());
+    }
+
+    public function testMultipleDiscountsMultiplicativeSorting()
+    {
+        $this->setConfigParam('calculateDiscountsMultiplicative', true);
+
+        /** @var oxPrice $price */
+
+        //case 1 (abs, %)
+        $price = oxNew('oxPrice');
+        $price->setNettoPriceMode();
+        $price->setPrice(100.0, 20);
+        $price->setDiscount(20.0, 'abs', 1);
+        $price->setDiscount(10.0, '%', 0);
+        $price->calculateDiscount();
+
+        $this->assertEquals(70.0, $price->getNettoPrice());
+        $this->assertEquals(84.0, $price->getBruttoPrice());
+        $this->assertEquals(14.0, $price->getVatValue());
+
+        //case 2 (abs, %)
+        $price = oxNew('oxPrice');
+        $price->setNettoPriceMode();
+        $price->setPrice(100.0, 20);
+        $price->setDiscount(20.0, 'abs', 0);
+        $price->setDiscount(10.0, '%', 1);
+        $price->calculateDiscount();
+
+        $this->assertEquals(72.0, $price->getNettoPrice());
+        $this->assertEquals(86.4, $price->getBruttoPrice());
+        $this->assertEquals(14.4, $price->getVatValue());
     }
 
     public function testMultipleDiscountsAdditive()
