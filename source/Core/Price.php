@@ -446,7 +446,7 @@ class Price
         $this->_aDiscounts[] = array(
             'value' => $discount->getAddSum(),
             'type' => $discount->getAddSumType(),
-            'sort' => $discount->oxdiscounts__oxsort->value,
+            'sort' => $discount->oxdiscount__oxsort->value,
         );
     }
 
@@ -487,6 +487,14 @@ class Price
 
         if ($this->_aDiscounts) {
 
+            //sorting
+            if ($calculateDiscountsMultiplicative) {
+                usort($this->_aDiscounts, function($a, $b) {
+                    return $a['sort'] - $b['sort'];
+                });
+            }
+
+            //if the discounts are calculated additive, init the total variable
             if (!$calculateDiscountsMultiplicative) {
                 $sumOfCalculatedDiscounts = 0;
             }
@@ -500,6 +508,7 @@ class Price
                 }
             }
 
+            //if the discounts are calculated additive, subtract the collected discount total from the price.
             if (!$calculateDiscountsMultiplicative) {
                 $dPrice -= $sumOfCalculatedDiscounts;
             }
