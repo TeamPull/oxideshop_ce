@@ -3102,7 +3102,7 @@ class Article extends \oxI18n implements ArticleInterface, \oxIUrl
 
             reset($aDiscounts);
             foreach ($aDiscounts as $oDiscount) {
-                $oPrice->setDiscount($oDiscount->getAddSum(), $oDiscount->getAddSumType());
+                $oPrice->addDiscount($oDiscount);
             }
             $oPrice->calculateDiscount();
         }
@@ -3593,7 +3593,7 @@ class Article extends \oxI18n implements ArticleInterface, \oxIUrl
 
             reset($aDiscounts);
             foreach ($aDiscounts as $oDiscount) {
-                $oPrice->setDiscount($oDiscount->getAddSum(), $oDiscount->getAddSumType());
+                $oPrice->addDiscount($oDiscount);
             }
             $oPrice->calculateDiscount();
         }

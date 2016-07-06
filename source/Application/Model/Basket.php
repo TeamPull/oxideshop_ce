@@ -831,7 +831,7 @@ class Basket extends \oxSuperCfg
                     reset($aDiscounts);
                     /** @var \oxDiscount $oDiscount */
                     foreach ($aDiscounts as $oDiscount) {
-                        $oBasketPrice->setDiscount($oDiscount->getAddSum(), $oDiscount->getAddSumType());
+                        $oBasketPrice->addDiscount($oDiscount);
                     }
                     $oBasketPrice->calculateDiscount();
                 } else {
