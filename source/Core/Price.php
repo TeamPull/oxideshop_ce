@@ -491,9 +491,8 @@ class Price
                 $sumOfCalculatedDiscounts = 0;
             }
 
-            /** @var Discount $discount */
+            //calculate the discounts either multiplicative or additive
             foreach ($this->_aDiscounts as $discount) {
-
                 if ($calculateDiscountsMultiplicative) {
                     $dPrice = $this->calculateDiscountMultiplicative($dPrice, $discount);
                 } else {

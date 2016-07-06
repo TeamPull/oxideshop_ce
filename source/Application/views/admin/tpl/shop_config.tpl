@@ -95,8 +95,8 @@ function editThis(sID)
             </dl>
             <dl>
                 <dt>
-                    <input type=hidden name=confbools[blCalculateDiscountsMultiplicative] value=false>
-                    <input type=checkbox name=confbools[blCalculateDiscountsMultiplicative] value=true  [{if ($confbools.blCalculateDiscountsMultiplicative)}]checked[{/if}] [{$readonly}]>
+                    <input type=hidden name=confbools[calculateDiscountsMultiplicative] value=false>
+                    <input type=checkbox name=confbools[calculateDiscountsMultiplicative] value=true  [{if ($confbools.calculateDiscountsMultiplicative)}]checked[{/if}] [{$readonly}]>
                     [{oxinputhelp ident="HELP_SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE"}]
                 </dt>
                 <dd>
