@@ -1849,7 +1849,7 @@ class Config extends SuperConfig
         $db->execute($query);
 
         $query = "insert into oxconfig (oxid, oxshopid, oxmodule, oxvarname, oxvartype, oxvarvalue)
-               values($newOXIDdQuoted, $shopIdQuoted, $moduleQuoted, $varNameQuoted, $varTypeQuoted, ENCODE( $varValueQuoted, $configKeyQuoted) )";
+               values($newOXIDdQuoted, $shopIdQuoted, $moduleQuoted, $varNameQuoted, $varTypeQuoted, $varValueQuoted)";
         $db->execute($query);
     }
 
@@ -1921,7 +1921,7 @@ class Config extends SuperConfig
      */
     public function getDecodeValueQuery($fieldName = "oxvarvalue")
     {
-        return " DECODE( {$fieldName}, '" . $this->getConfigParam('sConfigKey') . "') ";
+        return " $fieldName ";
     }
 
     /**
