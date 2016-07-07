@@ -627,7 +627,7 @@ class Config extends SuperConfig
         switch ($varType) {
             case 'arr':
             case 'aarr':
-                $this->setConfigParam($varName, unserialize($varVal));
+                $this->setConfigParam($varName, json_decode($varVal));
                 break;
             case 'bool':
                 $this->setConfigParam($varName, ($varVal == 'true' || $varVal == '1'));
@@ -1809,7 +1809,7 @@ class Config extends SuperConfig
         switch ($varType) {
             case 'arr':
             case 'aarr':
-                $value = serialize($varVal);
+                $value = json_encode($varVal,JSON_UNESCAPED_UNICODE);
                 break;
             case 'bool':
                 //config param
@@ -1902,7 +1902,7 @@ class Config extends SuperConfig
         switch ($type) {
             case 'arr':
             case 'aarr':
-                $value = unserialize($mOrigValue);
+                $value = json_decode($mOrigValue);
                 break;
             case 'bool':
                 $value = ($mOrigValue == 'true' || $mOrigValue == '1');
