@@ -23,13 +23,6 @@
 use OxidEsales\Eshop\Core\ConfigFile;
 use OxidEsales\Eshop\Core\Registry;
 
-if (defined('E_DEPRECATED')) {
-    //E_DEPRECATED is disabled particularly for PHP 5.3 as some 3rd party modules still uses deprecated functionality
-    error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-} else {
-    error_reporting(E_ALL ^ E_NOTICE);
-}
-
 if (!defined('OX_BASE_PATH')) {
     define('OX_BASE_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 }
