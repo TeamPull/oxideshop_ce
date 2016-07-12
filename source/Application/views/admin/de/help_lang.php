@@ -135,6 +135,21 @@ $aLang =  array(
                                                  '<li>oxaddress__oxcountryid = Land</li>' .
                                                  '<li>oxaddress__oxfon = Telefonnummer</li></ul>',
 
+'HELP_SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE' => 'Mit <span class="navipath_or_inputname">Rabatte multiplikativ berechnen</span> können Sie einstellen, ob die Rabatte einzeln oder kumuliert berechnet werden:<br>' .
+                                                 '<ul><li>Multiplikativ:<br>
+                                                 <strong>&nbsp;100¤</strong>&nbsp;&nbsp;Basispreis<br>
+                                                 <strong>-&nbsp;&nbsp;10%</strong>&nbsp;1. Rabatt<br>
+                                                 <strong>&nbsp;&nbsp;&nbsp;90¤</strong>&nbsp;&nbsp;Zwischensumme<br>
+                                                 <strong>-&nbsp;&nbsp;10%</strong>&nbsp;2. Rabatt<br>
+                                                 <strong>&nbsp;&nbsp;&nbsp;81¤</strong>&nbsp;&nbsp;Endsumme
+                                                 </li>
+                                                 <li>Additiv:<br>
+                                                 &nbsp;10% + 10% = 20%<br>
+                                                 <strong>&nbsp;100¤</strong>&nbsp;&nbsp;Basispreis<br>
+                                                 <strong>-&nbsp;&nbsp;20%</strong>&nbsp;Kummulierte Rabatte<br>
+                                                 <strong>&nbsp;&nbsp;&nbsp;80¤</strong>&nbsp;&nbsp;Endsumme<br>
+                                                 </li>',
+
 'HELP_SHOP_CONFIG_USENEGATIVESTOCK'           => 'Mit <span class="navipath_or_inputname">Negative Lagerbestände erlauben</span> können Sie einstellen, welcher Lagerbestand berechnet wird, wenn ein Artikel ausverkauft ist:<br>' .
                                                  '<ul><li>Wenn die Einstellung aktiv ist, werden negative Lagerbestände berechnet, wenn weitere Exemplare bestellt werden.</li>' .
                                                  '<li>Wenn die Einstellung nicht aktiv ist, fällt der Lagerbestand eines Artikels nie unter 0. Auch dann nicht, wenn der Artikel bereits ausverkauft ist und noch weitere Exemplare bestellt werden.</li></ul>',
@@ -450,7 +465,7 @@ $aLang =  array(
                                                  '<li><span class="userinput_or_code">itm</span>: Rabatt in Form eines kostenfreien Artikels (Dreingabe). Legen Sie die Menge für diesen Artikel fest. Wählen Sie "Multiplizieren", wenn die Menge des rabattierten Artikels im Warenkorb mit der Menge des kostenlosen Artikels multipliziert werden soll.</li>'.
                                                  '</ul>',
 
-
+'HELP_DISCOUNT_MAIN_SORTING'                  => 'Bei <span class="navipath_or_inputname">Sortierung</span> stellen Sie ein, in welcher Reihenfolge die Rabatte berechnet werden sollen.',
 
 'HELP_GENERAL_SEO_ACTCAT'                     => 'Sie können für einen Artikel unterschiedliche SEO URLs festlegen: Für bestimmte Kategorien und für den Hersteller des Artikels. Mit <span class="navipath_or_inputname">Aktive Kategorie/Hersteller</span> können Sie wählen, welche SEO URL Sie anpassen möchten.',
 

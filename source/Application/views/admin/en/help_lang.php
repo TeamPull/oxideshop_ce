@@ -135,6 +135,22 @@ $aLang =  array(
                                                  '<li>oxaddress__oxcountryid = Country</li>' .
                                                  '<li>oxaddress__oxfon = Telephone number</li></ul>',
 
+'HELP_SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE' => 'With <span class="navipath_or_inputname">calculate discounts multiplicative</span> you can define if discounts are calculated multiplicative or additive:<br>' .
+                                                '<ul><li>Multiplicative:<br>
+                                                 <strong>&nbsp;100¤</strong>&nbsp;&nbsp;Basic price<br>
+                                                 <strong>-&nbsp;&nbsp;10%</strong>&nbsp;1. Discount<br>
+                                                 <strong>&nbsp;&nbsp;&nbsp;90¤</strong>&nbsp;&nbsp;Subtotal<br>
+                                                 <strong>-&nbsp;&nbsp;10%</strong>&nbsp;2. Discount<br>
+                                                 <strong>&nbsp;&nbsp;&nbsp;81¤</strong>&nbsp;&nbsp;Final total
+                                                 </li>
+                                                 <li>Additive:<br>
+                                                 &nbsp;10% + 10% = 20%<br>
+                                                 <strong>&nbsp;100¤</strong>&nbsp;&nbsp;Basic price<br>
+                                                 <strong>-&nbsp;&nbsp;20%</strong>&nbsp;Accumulated discounts<br>
+                                                 <strong>&nbsp;&nbsp;&nbsp;80¤</strong>&nbsp;&nbsp;Final total<br>
+                                                 </li>',
+
+
 'HELP_SHOP_CONFIG_USENEGATIVESTOCK'           => 'With <span class="navipath_or_inputname">Allow negative Stock Values</span> you can define how stock levels are calculated of products are out of stock:<br>' .
                                                  '<ul><li>If the setting is checked, negative stock values are calculated if further units are bought.</li>' .
                                                  '<li>If the setting is unchecked, the stock value never falls below 0, even if further units are bought.</li></ul>',
@@ -449,7 +465,7 @@ $aLang =  array(
                                                  '<li><span class="userinput_or_code">itm</span>: Discount in the form of a free product. Set the amount of this product. Choose "Multiply" if the amount of discounted product in shopping cart should be multiplied with the amount of the free product.</li>'.
                                                  '</ul>',
 
-
+'HELP_DISCOUNT_MAIN_SORTING'                  => 'In <span class="navipath_or_inputname">Sorting</span> you can specify the sequence in which the discounts are calculated.',
 
 'HELP_GENERAL_SEO_ACTCAT'                     => 'You can define several SEO URLs for products: For certain categories and manufacturer pages. With <span class="navipath_or_inputname">Active Category/Vendor</span> you can select the SEO URL you want to edit.',
 

@@ -93,7 +93,17 @@ function editThis(sID)
                 </dd>
                 <div class="spacer"></div>
             </dl>
-
+            <dl>
+                <dt>
+                    <input type=hidden name=confbools[calculateDiscountsMultiplicative] value=false>
+                    <input type=checkbox name=confbools[calculateDiscountsMultiplicative] value=true  [{if $confbools.calculateDiscountsMultiplicative}]checked[{/if}] [{$readonly}]>
+                    [{oxinputhelp ident="HELP_SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE"}]
+                </dt>
+                <dd>
+                    [{oxmultilang ident="SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE"}]
+                </dd>
+                <div class="spacer"></div>
+            </dl>
          </div>
     </div>
 

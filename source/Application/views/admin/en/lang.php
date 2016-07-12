@@ -1066,6 +1066,7 @@ $aLang = array(
 'SHOP_CONFIG_UNASSIGNDEFAULTCAT'                           => 'Unassign default category',
 'SHOP_CONFIG_ASSIGNEDDEFAULTCAT'                           => 'Default category:',
 'SHOP_CONFIG_ACTIVECATEGORYBYSTART'                        => 'Active Category at Start',
+'SHOP_CONFIG_CALCULATEDISCOUNTSMULTIPLICATIVE'             => 'Calculate discounts multiplicative.',
 'SHOP_CONFIG_AUTOSEARCHONCAT'                              => 'Start Search automatically if User selects a Category',
 'SHOP_CONFIG_AUTOICONS'                                    => 'Generate Icons automatically from Thumbnails (might slow down your server)',
 'SHOP_CONFIG_ALLOWUNEVENAMOUNTS'                           => 'Allow fraction Quantities (e.g. 1.5)',

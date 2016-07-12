@@ -22,6 +22,7 @@
 
 namespace OxidEsales\Eshop\Core;
 
+use OxidEsales\Eshop\Application\Model\Discount;
 use oxRegistry;
 use oxPrice;
 
@@ -421,10 +422,32 @@ class Price
      *
      * @param double $dValue discount value
      * @param string $sType  discount type: abs or %
+     * @param int $sorting discount sorting
+     *
+     * @deprecated Use Price::addDiscount instead
      */
-    public function setDiscount($dValue, $sType)
+    public function setDiscount($dValue, $sType, $sorting = 0)
     {
-        $this->_aDiscounts[] = array('value' => $dValue, 'type' => $sType);
+        $this->_aDiscounts[] = array(
+            'value' => $dValue,
+            'type' => $sType,
+            'sort' => $sorting,
+        );
+    }
+
+    /**
+     * Sets discount to price
+     *
+     * @param Discount $discount
+     */
+    public function addDiscount(Discount $discount)
+    {
+        //map object to array to stay compatible
+        $this->_aDiscounts[] = array(
+            'value' => $discount->getAddSum(),
+            'type' => $discount->getAddSumType(),
+            'sort' => $discount->oxdiscount__oxsort->value,
+        );
     }
 
     /**
@@ -434,7 +457,19 @@ class Price
      */
     public function getDiscounts()
     {
-        return $this->_aDiscounts;
+        $discounts = array();
+
+        if ($this->_aDiscounts) {
+            /** @var Discount $tmpDiscount */
+            foreach($this->_aDiscounts as $discount) {
+                $discounts[] = array(
+                    'value' => $discount->oxdiscount__oxaddsum->value,
+                    'type' => $discount->oxdiscount__oxaddsumtype->value,
+                    'sort' => $discount->oxdiscounts__oxsort->value,
+                );
+            }
+        }
+        return $discounts;
     }
 
     /**
@@ -445,30 +480,96 @@ class Price
         $this->_aDiscounts = null;
     }
 
-    /**
-     * Calculates price: affects discounts
-     */
     public function calculateDiscount()
     {
         $dPrice = $this->getPrice();
-        $aDiscounts = $this->getDiscounts();
+        $calculateDiscountsMultiplicative = Registry::getConfig()->getConfigParam('calculateDiscountsMultiplicative');
 
-        if ($aDiscounts) {
-            foreach ($aDiscounts as $aDiscount) {
+        if ($this->_aDiscounts) {
 
-                if ($aDiscount['type'] == 'abs') {
-                    $dPrice = $dPrice - $aDiscount['value'];
+            //sorting
+            if ($calculateDiscountsMultiplicative) {
+                usort($this->_aDiscounts, function($a, $b) {
+                    return $a['sort'] - $b['sort'];
+                });
+            }
+
+            //if the discounts are calculated additive, init the total variable
+            if (!$calculateDiscountsMultiplicative) {
+                $sumOfCalculatedDiscounts = 0;
+            }
+
+            //calculate the discounts either multiplicative or additive
+            foreach ($this->_aDiscounts as $discount) {
+                if ($calculateDiscountsMultiplicative) {
+                    $dPrice = $this->calculateDiscountMultiplicative($dPrice, $discount);
                 } else {
-                    $dPrice = $dPrice * (100 - $aDiscount['value']) / 100;
+                    $sumOfCalculatedDiscounts += $this->calculateDiscountAdditive($dPrice, $discount);
                 }
             }
+
+            //if the discounts are calculated additive, subtract the collected discount total from the price.
+            if (!$calculateDiscountsMultiplicative) {
+                $dPrice -= $sumOfCalculatedDiscounts;
+            }
+
             if ($dPrice < 0) {
-                $this->setPrice(0);
+                $this->setPrice(0.0);
             } else {
                 $this->setPrice($dPrice);
             }
 
             $this->_flushDiscounts();
+        }
+    }
+
+    /**
+     * Helper method to calculate the discounts multiplicative. Means: Calculate the discount on the base price. If there
+     * is another discount, then calculate it from the new price:
+     *
+     *  100€    base price
+     * - 10%    first discount
+     * = 90€    sum after first discount
+     * - 10%    next discount, calculated on the subtotal
+     * = 81€    final discounted price
+     *
+     * Note that this also includes absolute discounts.
+     *
+     * @param float $dPrice
+     * @param array $discount
+     * @return float
+     */
+    private function calculateDiscountMultiplicative($dPrice, array $discount)
+    {
+        if ($discount['type'] == 'abs') {
+            return (float) $dPrice - $discount['value'];
+        } else {
+            return (float) $dPrice * (100 - $discount['value']) / 100;
+        }
+    }
+
+    /**
+     * Helper method to calculate the discounts additive. Means: Calculate the discount on the base price. If there
+     * is another discount, then calculate it also from the base price:
+     *
+     * 10% + 10% = 20%
+     *
+     *  100€    base price
+     * - 20%    all discounts summed up
+     * = 80€    final discounted price
+     *
+     * Note that this also includes absolute discounts.
+     *
+     * @param float $dPrice
+     * @param array $discount
+     * @return float
+     */
+    private function calculateDiscountAdditive($dPrice, array $discount)
+    {
+        if ($discount['type'] == 'abs') {
+            return (float) $discount['value'];
+        } else {
+            return (float) $dPrice - ($dPrice * (100 - $discount['value']) / 100);
         }
     }
 }

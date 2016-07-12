@@ -22,6 +22,7 @@
 
 namespace OxidEsales\Eshop\Application\Controller\Admin;
 
+use OxidEsales\Eshop\Core\Registry;
 use oxRegistry;
 use oxDb;
 use stdClass;
@@ -95,6 +96,8 @@ class DiscountMain extends \oxAdminDetails
                 return "popups/discount_item.tpl";
             }
         }
+
+        $this->_aViewData['calculateDiscountsMultiplicative'] = Registry::getConfig()->getConfigParam('calculateDiscountsMultiplicative');
 
         return "discount_main.tpl";
     }
