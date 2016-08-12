@@ -2555,14 +2555,23 @@ class Article extends \oxI18n implements ArticleInterface, \oxIUrl
     }
 
     /**
+     * the uninitilized list of attributes
+     * use getAttributes
+     * @return oxattributelist
+     */
+    protected function newAttributeList(){
+        return oxNew('oxattributelist');
+    }
+
+    /**
      * Loads and returns attribute list associated with this article
      *
-     * @return object
+     * @return oxattributelist
      */
     public function getAttributes()
     {
         if ($this->_oAttributeList === null) {
-            $this->_oAttributeList = oxNew('oxattributelist');
+            $this->_oAttributeList = $this->newAttributelist();
             $this->_oAttributeList->loadAttributes($this->getId(), $this->getParentId());
         }
 
@@ -2572,12 +2581,12 @@ class Article extends \oxI18n implements ArticleInterface, \oxIUrl
     /**
      * Loads and returns displayable in basket/order attributes list associated with this article
      *
-     * @return object
+     * @return oxattributelist
      */
     public function getAttributesDisplayableInBasket()
     {
         if ($this->_oAttributeList === null) {
-            $this->_oAttributeList = oxNew('oxattributelist');
+            $this->_oAttributeList = $this->newAttributelist();
             $this->_oAttributeList->loadAttributesDisplayableInBasket($this->getId(), $this->getParentId());
         }
 
