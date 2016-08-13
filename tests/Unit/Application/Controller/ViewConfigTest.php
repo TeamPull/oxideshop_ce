@@ -564,16 +564,6 @@ class ViewConfigTest extends \OxidTestCase
         print $viewConfig->getModuleUrl('test1');
     }
 
-    private function fakeModuleStructure()
-    {
-        $config = $this->getConfig();
-        $config->setConfigParam("iDebug", -1);
-
-        $fakeShopDirectory = $this->createModuleStructure();
-        $config->setConfigParam("sShopDir", $fakeShopDirectory);
-        return $config;
-    }
-
     public function testGetModuleUrlExceptionThrownWhenPathNotFoundAndDebugEnabled()
     {
        
@@ -2407,6 +2397,17 @@ class ViewConfigTest extends \OxidTestCase
         $this->assertEquals( $this->getConfig()->getEdition(), $oViewConfig->getEdition() );
     }
 
+    private function fakeModuleStructure()
+    {
+        $config = $this->getConfig();
+        $config->setConfigParam("iDebug", -1);
+
+        $fakeShopDirectory = $this->createModuleStructure();
+        $config->setConfigParam("sShopDir", $fakeShopDirectory);
+        return $config;
+    }
+
+    
     /**
      * Creates module structre for testing.
      *
