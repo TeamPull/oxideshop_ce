@@ -559,15 +559,15 @@ class ViewConfigTest extends \OxidTestCase
         $this->assertEquals("{$baseUrl}modules/test1/out/blocks/test2.tpl", $viewConfig->getModuleUrl('test1', 'out/blocks/test2.tpl'));
         $this->assertEquals("{$baseUrl}modules/test1/out/blocks/test2.tpl", $viewConfig->getModuleUrl('test1', '/out/blocks/test2.tpl'));
         $this->assertEquals("{$baseUrl}modules/test1/", $viewConfig->getModuleUrl('test1'));
-        print "starting admin mode\n";
-        //test if the subjevt under test still generates a valid module url in admin mode
+        
+        //test if the subject under test still generates a valid module url in admin mode
         $config->setAdminMode(true);
         $viewConfig->setAdminMode(true);
-        print $viewConfig->getModuleUrl('test1');
+        
         //in oir test environment the domain for admin area is the normal shopurl
         $adminUrlWithoutAdminPath = $baseUrl;
         $this->assertEquals("{$adminUrlWithoutAdminPath}modules/test1/", $viewConfig->getModuleUrl('test1'));
-
+        //test if it respects the admin url setting
         $config->setConfigParam('sAdminUrl','http://admin.localhost.local/admin');
         $this->assertEquals("http://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));
 
