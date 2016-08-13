@@ -564,14 +564,18 @@ class ViewConfigTest extends \OxidTestCase
         $config->setAdminMode(true);
         $viewConfig->setAdminMode(true);
         
-        //in oir test environment the domain for admin area is the normal shopurl
-        $adminUrlWithoutAdminPath = $baseUrl;
-        $this->assertEquals("{$adminUrlWithoutAdminPath}modules/test1/", $viewConfig->getModuleUrl('test1'));
+        print $config->getCurrentShopUrl() ."\n";
+       
         //test if it respects the admin url setting
         $config->setConfigParam('sAdminUrl','http://admin.localhost.local/admin');
+print '2:'. $config->getCurrentShopUrl();
         $this->assertEquals("http://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));
 
-        
+        $config->getCurrentShopUrl();
+
+        //in our test environment the domain for admin area is the normal shopurl
+        $adminUrlWithoutAdminPath = $baseUrl;
+        $this->assertEquals("{$adminUrlWithoutAdminPath}modules/test1/", $viewConfig->getModuleUrl('test1'));
     }
 
     public function testGetModuleUrlExceptionThrownWhenPathNotFoundAndDebugEnabled()
