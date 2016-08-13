@@ -510,7 +510,7 @@ class ViewConfigTest extends \OxidTestCase
         /** @var oxViewConfig|PHPUnit_Framework_MockObject_MockObject $viewConfig */
         $viewConfig = $this->getMock('oxViewConfig', array('getConfig'));
         $viewConfig->expects($this->any())->method('getConfig')->will($this->returnValue($config));
-
+        $fakeShopDirectory = $config->getConfigParam('sShopDir');
         $this->assertEquals($fakeShopDirectory . "/modules/test1/out", $viewConfig->getModulePath('test1', 'out'));
         $this->assertEquals($fakeShopDirectory . "/modules/test1/out/", $viewConfig->getModulePath('test1', '/out/'));
 
@@ -522,7 +522,7 @@ class ViewConfigTest extends \OxidTestCase
     {
         $config = $this->fakeModuleStructure();
         $config->setConfigParam("iDebug", -1);
-
+        $fakeShopDirectory = $config->getConfigParam('sShopDir');
         $message = "Requested file not found for module test1 (" . $fakeShopDirectory . "modules/test1/out/blocks/non_existing_template.tpl)";
         $this->setExpectedException('\OxidEsales\Eshop\Core\Exception\FileException', $message);
 
