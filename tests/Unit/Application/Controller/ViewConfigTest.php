@@ -533,10 +533,10 @@ class ViewConfigTest extends \OxidTestCase
         $viewConfig->getModulePath('test1', '/out/blocks/non_existing_template.tpl');
     }
 
-    public function testGetModulePathExceptionThrownWhenPathNotFoundAndDebugDisabled()
+    public function testGetModulePathNoExceptionThrownWhenPathNotFoundAndDebugDisabled()
     {
         $config = $this->fakeModuleStructure();
-        $config->setConfigParam("iDebug", 0)
+        $config->setConfigParam("iDebug", 0);
 
         /** @var oxViewConfig|PHPUnit_Framework_MockObject_MockObject $viewConfig */
         $viewConfig = $this->getMock('oxViewConfig', array('getConfig'));
@@ -577,7 +577,7 @@ class ViewConfigTest extends \OxidTestCase
     public function testGetModuleUrlExceptionThrownWhenPathNotFoundAndDebugEnabled()
     {
        
-        $this->fakeModuleStructure();        
+        $config = $this->fakeModuleStructure();        
 
         $message = "Requested file not found for module test1 (" . $fakeShopDirectory . "modules/test1/out/blocks/non_existing_template.tpl)";
         $this->setExpectedException('oxFileException', $message);
