@@ -1221,9 +1221,19 @@ class ViewConfig extends \oxSuperCfg
      */
     public function getModuleUrl($sModule, $sFile = '')
     {
+        $c = $this->getConfig();
+        $shopUrl = rtrim($c->getCurrentShopUrl(), '/');
+        if ($this->isAdmin()){
+           //in admin area we like have the admin domain but not the path /admin
+           //because /modules.... and not /admin/modules...
+           //and we need admin domain because of browser security restriction wenn fetching module resources 
+           //from a differt domain
+           $adminDir = $c->getConfigParam('sAdminDir');
+           $shopUrl = substr($shopUrl,0,-strlen($adminDir))
+        }
         $sUrl = str_replace(
-            rtrim($this->getConfig()->getConfigParam('sShopDir'), '/'),
-            rtrim($this->getConfig()->getCurrentShopUrl(false), '/'),
+            rtrim($c->getConfigParam('sShopDir'), '/'),
+            $shopUrl,
             $this->getModulePath($sModule, $sFile)
         );
 
