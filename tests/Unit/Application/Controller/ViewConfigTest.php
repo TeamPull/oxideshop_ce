@@ -505,29 +505,24 @@ class ViewConfigTest extends \OxidTestCase
 
     public function testGetModulePath()
     {
-        $config = $this->getConfig();
-        $fakeShopDirectory = $this->createModuleStructure();
-        $config->setConfigParam("sShopDir", $fakeShopDirectory . "/");
+        $config = $this->fakeModuleStructure();
 
         /** @var oxViewConfig|PHPUnit_Framework_MockObject_MockObject $viewConfig */
         $viewConfig = $this->getMock('oxViewConfig', array('getConfig'));
         $viewConfig->expects($this->any())->method('getConfig')->will($this->returnValue($config));
+        $fakeShopDirectory = $config->getConfigParam('sShopDir');
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out", $viewConfig->getModulePath('test1', 'out'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out/", $viewConfig->getModulePath('test1', '/out/'));
 
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out", $viewConfig->getModulePath('test1', 'out'));
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out/", $viewConfig->getModulePath('test1', '/out/'));
-
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', 'out/blocks/test2.tpl'));
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', '/out/blocks/test2.tpl'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', 'out/blocks/test2.tpl'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', '/out/blocks/test2.tpl'));
     }
 
     public function testGetModulePathExceptionThrownWhenPathNotFoundAndDebugEnabled()
     {
-        $config = $this->getConfig();
+        $config = $this->fakeModuleStructure();
         $config->setConfigParam("iDebug", -1);
-
-        $fakeShopDirectory = $this->createModuleStructure();
-        $config->setConfigParam("sShopDir", $fakeShopDirectory);
-
+        $fakeShopDirectory = $config->getConfigParam('sShopDir');
         $message = "Requested file not found for module test1 (" . $fakeShopDirectory . "modules/test1/out/blocks/non_existing_template.tpl)";
         $this->setExpectedException('\OxidEsales\Eshop\Core\Exception\FileException', $message);
 
@@ -538,13 +533,10 @@ class ViewConfigTest extends \OxidTestCase
         $viewConfig->getModulePath('test1', '/out/blocks/non_existing_template.tpl');
     }
 
-    public function testGetModulePathExceptionThrownWhenPathNotFoundAndDebugDisabled()
+    public function testGetModulePathNoExceptionThrownWhenPathNotFoundAndDebugDisabled()
     {
-        $config = $this->getConfig();
+        $config = $this->fakeModuleStructure();
         $config->setConfigParam("iDebug", 0);
-
-        $fakeShopDirectory = $this->createModuleStructure();
-        $config->setConfigParam("sShopDir", $fakeShopDirectory . "/");
 
         /** @var oxViewConfig|PHPUnit_Framework_MockObject_MockObject $viewConfig */
         $viewConfig = $this->getMock('oxViewConfig', array('getConfig'));
@@ -555,11 +547,7 @@ class ViewConfigTest extends \OxidTestCase
 
     public function testGetModuleUrl()
     {
-        $config = $this->getConfig();
-        $config->setConfigParam("iDebug", -1);
-
-        $fakeShopDirectory = $this->createModuleStructure();
-        $config->setConfigParam("sShopDir", $fakeShopDirectory);
+        $config = $this->fakeModuleStructure();
 
         /** @var oxViewConfig|PHPUnit_Framework_MockObject_MockObject $viewConfig */
         $viewConfig = $this->getMock('oxViewConfig', array('getConfig'));
@@ -570,16 +558,33 @@ class ViewConfigTest extends \OxidTestCase
         $this->assertEquals("{$baseUrl}modules/test1/out/", $viewConfig->getModuleUrl('test1', '/out/'));
         $this->assertEquals("{$baseUrl}modules/test1/out/blocks/test2.tpl", $viewConfig->getModuleUrl('test1', 'out/blocks/test2.tpl'));
         $this->assertEquals("{$baseUrl}modules/test1/out/blocks/test2.tpl", $viewConfig->getModuleUrl('test1', '/out/blocks/test2.tpl'));
+        $this->assertEquals("{$baseUrl}modules/test1/", $viewConfig->getModuleUrl('test1'));
+        
+        //test if the subject under test still generates a valid module url in admin mode
+        $config->setAdminMode(true);
+        $viewConfig->setAdminMode(true);
+        $config->setConfigParam('sAdminDir','admin');
+
+        //in our test environment the domain for admin area is the normal shopurl
+        //When using subshops it is important that getModuleUrl does not return the subshopurl in admin mode
+        //because of browser security restrictions take effect when loading resources from differt domains
+        $adminUrlWithoutAdminPath = $baseUrl;
+        $this->assertEquals("{$adminUrlWithoutAdminPath}modules/test1/", $viewConfig->getModuleUrl('test1'));
+
+        //Test if getModuleUrl returns the right url if adminssl url is set
+        $config->setConfigParam('sAdminSSLURL','https://admin.localhost.local/admin/');
+        $config->setIsSsl(true);
+        //Next assert is only to guarantee excpected internal behavior to find problems faster    
+        $this->assertEquals("https://admin.localhost.local/admin/",$config->getCurrentShopUrl());
+        //The module url is expected to start with the admin url but without the admin directory
+        $this->assertEquals("https://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));      
     }
 
     public function testGetModuleUrlExceptionThrownWhenPathNotFoundAndDebugEnabled()
     {
-        $config = $this->getConfig();
-        $config->setConfigParam("iDebug", -1);
-
-        $fakeShopDirectory = $this->createModuleStructure();
-        $config->setConfigParam("sShopDir", $fakeShopDirectory);
-
+       
+        $config = $this->fakeModuleStructure();        
+        $fakeShopDirectory = $config->getConfigParam('sShopDir');
         $message = "Requested file not found for module test1 (" . $fakeShopDirectory . "modules/test1/out/blocks/non_existing_template.tpl)";
         $this->setExpectedException('oxFileException', $message);
 
@@ -2408,6 +2413,17 @@ class ViewConfigTest extends \OxidTestCase
         $this->assertEquals( $this->getConfig()->getEdition(), $oViewConfig->getEdition() );
     }
 
+    private function fakeModuleStructure()
+    {
+        $config = $this->getConfig();
+        $config->setConfigParam("iDebug", -1);
+
+        $fakeShopDirectory = $this->createModuleStructure();
+        $config->setConfigParam("sShopDir", $fakeShopDirectory);
+        return $config;
+    }
+
+    
     /**
      * Creates module structre for testing.
      *
