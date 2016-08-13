@@ -511,11 +511,11 @@ class ViewConfigTest extends \OxidTestCase
         $viewConfig = $this->getMock('oxViewConfig', array('getConfig'));
         $viewConfig->expects($this->any())->method('getConfig')->will($this->returnValue($config));
         $fakeShopDirectory = $config->getConfigParam('sShopDir');
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out", $viewConfig->getModulePath('test1', 'out'));
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out/", $viewConfig->getModulePath('test1', '/out/'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out", $viewConfig->getModulePath('test1', 'out'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out/", $viewConfig->getModulePath('test1', '/out/'));
 
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', 'out/blocks/test2.tpl'));
-        $this->assertEquals($fakeShopDirectory . "/modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', '/out/blocks/test2.tpl'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', 'out/blocks/test2.tpl'));
+        $this->assertEquals($fakeShopDirectory . "modules/test1/out/blocks/test2.tpl", $viewConfig->getModulePath('test1', '/out/blocks/test2.tpl'));
     }
 
     public function testGetModulePathExceptionThrownWhenPathNotFoundAndDebugEnabled()
@@ -559,7 +559,7 @@ class ViewConfigTest extends \OxidTestCase
         $this->assertEquals("{$baseUrl}modules/test1/out/blocks/test2.tpl", $viewConfig->getModuleUrl('test1', 'out/blocks/test2.tpl'));
         $this->assertEquals("{$baseUrl}modules/test1/out/blocks/test2.tpl", $viewConfig->getModuleUrl('test1', '/out/blocks/test2.tpl'));
         $this->assertEquals("{$baseUrl}modules/test1/", $viewConfig->getModuleUrl('test1'));
-        
+        print "starting admin mode\n";
         //test if the subjevt under test still generates a valid module url in admin mode
         $config->setAdminMode(true);
         $viewConfig->setAdminMode(true);
@@ -578,7 +578,7 @@ class ViewConfigTest extends \OxidTestCase
     {
        
         $config = $this->fakeModuleStructure();        
-
+        $fakeShopDirectory = $config->getConfigParam('sShopDir');
         $message = "Requested file not found for module test1 (" . $fakeShopDirectory . "modules/test1/out/blocks/non_existing_template.tpl)";
         $this->setExpectedException('oxFileException', $message);
 
