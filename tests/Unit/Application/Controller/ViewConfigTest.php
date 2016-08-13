@@ -565,9 +565,9 @@ class ViewConfigTest extends \OxidTestCase
         $viewConfig->setAdminMode(true);
         
         print $config->getCurrentShopUrl() ."\n";
-       
+        $config->setConfigParam('sAdminDir','admin');
         //test if it respects the admin url setting
-        $config->setConfigParam('sAdminUrl','http://admin.localhost.local/admin');
+        $config->setConfigParam('sAdminSSLURL','http://admin.localhost.local/admin');
 print '2:'. $config->getCurrentShopUrl();
         $this->assertEquals("http://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));
 
