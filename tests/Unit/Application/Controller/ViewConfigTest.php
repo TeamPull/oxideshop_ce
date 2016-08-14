@@ -577,7 +577,7 @@ class ViewConfigTest extends \OxidTestCase
         //Next assert is only to guarantee excpected internal behavior to find problems faster    
         $this->assertEquals("https://admin.localhost.local/admin/",$config->getCurrentShopUrl());
         //The module url is expected to start with the admin url but without the admin directory
-        $this->assertEquals("http://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));      
+        $this->assertEquals("https://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));      
     }
 
     public function testGetModuleUrlExceptionThrownWhenPathNotFoundAndDebugEnabled()
