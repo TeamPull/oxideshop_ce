@@ -563,19 +563,21 @@ class ViewConfigTest extends \OxidTestCase
         //test if the subject under test still generates a valid module url in admin mode
         $config->setAdminMode(true);
         $viewConfig->setAdminMode(true);
-        
-        print $config->getCurrentShopUrl() ."\n";
         $config->setConfigParam('sAdminDir','admin');
-        //test if it respects the admin url setting
-        $config->setConfigParam('sAdminSSLURL','http://admin.localhost.local/admin');
-print '2:'. $config->getCurrentShopUrl();
-        $this->assertEquals("http://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));
-
-        $config->getCurrentShopUrl();
 
         //in our test environment the domain for admin area is the normal shopurl
+        //When using subshops it is important that getModuleUrl does not return the subshopurl in admin mode
+        //because of browser security restrictions take effect when loading resources from differt domains
         $adminUrlWithoutAdminPath = $baseUrl;
         $this->assertEquals("{$adminUrlWithoutAdminPath}modules/test1/", $viewConfig->getModuleUrl('test1'));
+
+        //Test if getModuleUrl returns the right url if adminssl url is set
+        $config->setConfigParam('sAdminSSLURL','https://admin.localhost.local/admin');
+        $config->setIsSsl(true);
+        //Next assert is only to guarantee excpected internal behavior to find problems faster    
+        $this->assertEquals("http://admin.localhost.local/admin/",$config->getCurrentShopUrl());
+        //The module url is expected to start with the admin url but without the admin directory
+        $this->assertEquals("http://admin.localhost.local/modules/test1/", $viewConfig->getModuleUrl('test1'));      
     }
 
     public function testGetModuleUrlExceptionThrownWhenPathNotFoundAndDebugEnabled()
