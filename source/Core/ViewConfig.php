@@ -1228,8 +1228,8 @@ class ViewConfig extends \oxSuperCfg
            //because /modules.... and not /admin/modules...
            //and we need admin domain because of browser security restriction wenn fetching module resources 
            //from a differt domain
-           $adminDir = $c->getConfigParam('sAdminDir');
-           $shopUrl = substr($shopUrl,0,-strlen($adminDir));
+           $adminDir = '/'.$c->getConfigParam('sAdminDir');
+           $shopUrl = substr($shopUrl,0,-strlen($adminDir);
         }
         $sUrl = str_replace(
             rtrim($c->getConfigParam('sShopDir'), '/'),
