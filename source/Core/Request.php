@@ -125,8 +125,8 @@ class Request
             foreach ($sValue as $sKey => $sVal) {
                 $sValidKey = $sKey;
                 if (!$aRaw || !in_array($sKey, $aRaw)) {
-                    $this->checkParamSpecialChars($sValidKey);
-                    $this->checkParamSpecialChars($sVal);
+                    $sValidKey = $this->checkParamSpecialChars($sValidKey);
+                    $sVal = $this->checkParamSpecialChars($sVal);
                     if ($sValidKey != $sKey) {
                         unset ($sValue[$sKey]);
                     }
