@@ -95,7 +95,7 @@ class Module extends \oxSuperCfg
     private function fixEncoding(& $value){
         if (is_array($value)){
             foreach($value as &$valueItem){
-                $this->fixEncoding($valueItem)
+                $this->fixEncoding($valueItem);
             }
         } elseif (is_string($value)){
             $fromEncoding = mb_detect_encoding($value, 'ISO-8859-15, UTF-8', true);
