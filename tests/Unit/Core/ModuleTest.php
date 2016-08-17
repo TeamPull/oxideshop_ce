@@ -84,6 +84,16 @@ class ModuleTest extends \OxidTestCase
         $this->assertEquals($aModule, $oModule->getNonPublicVar("_aModule"));
     }
 
+    public function testEncoding()
+    {
+      $aModule = array(
+            'id'          => 'encodingtest',
+            'title'       => 'This is utf8 : €äàâãüß',
+            'description' => array("en" => "test EN value", "de" => "test DE val ö")
+          );
+
+    }
+
     /**
      * oxModule::load() test case, no extend
      *
