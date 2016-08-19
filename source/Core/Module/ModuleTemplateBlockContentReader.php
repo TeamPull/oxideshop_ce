@@ -37,29 +37,23 @@ class ModuleTemplateBlockContentReader
      * Path to template block file is provided via $pathFormatter.
      * Throw exception if file does not exist or is not readable.
      *
-     * @param ModuleTemplateBlockPathFormatter $pathFormatter
+     * @param string $filePath
      *
      * @throws \oxException
      *
      * @return string
      */
-    public function getContent($pathFormatter)
+    public function getContent($filePath)
     {
-        if (!$pathFormatter instanceof ModuleTemplateBlockPathFormatter) {
-            $exceptionMessage = 'Provided object is not an instance of class %s or does not have method getPath().';
-            throw oxNew('oxException', sprintf($exceptionMessage, ModuleTemplateBlockPathFormatter::class));
-        }
-
-        $filePath = $pathFormatter->getPath();
 
         if (!file_exists($filePath)) {
-            $exceptionMessage = "Template block file (%s) was not found for module '%s'.";
-            throw oxNew('oxException', sprintf($exceptionMessage, $filePath, $pathFormatter->getModuleId()));
+            $exceptionMessage = "Template block file (%s) was not found.";
+            throw oxNew('oxException', sprintf($exceptionMessage, $filePath));
         }
 
         if (!is_readable($filePath)) {
-            $exceptionMessage = "Template block file (%s) is not readable for module '%s'.";
-            throw oxNew('oxException', sprintf($exceptionMessage, $filePath, $pathFormatter->getModuleId()));
+            $exceptionMessage = "Template block file (%s) is not readable.";
+            throw oxNew('oxException', sprintf($exceptionMessage, $filePath));
         }
 
         return file_get_contents($filePath);

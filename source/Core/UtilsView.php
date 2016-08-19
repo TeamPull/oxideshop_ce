@@ -463,10 +463,10 @@ class UtilsView extends \oxSuperCfg
         $pathFormatter->setModulesPath($this->getConfig()->getModulesDir());
         $pathFormatter->setModuleId($moduleId);
         $pathFormatter->setFileName($fileName);
-
+        $path = $pathFormatter->getPath();
         $blockContentReader = oxNew(ModuleTemplateBlockContentReader::class);
 
-        return $blockContentReader->getContent($pathFormatter);
+        return $blockContentReader->getContent($path);
     }
 
     /**

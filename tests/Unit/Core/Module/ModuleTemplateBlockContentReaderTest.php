@@ -44,7 +44,7 @@ class ModuleTemplateBlockContentReaderTest extends UnitTestCase
 
     public function testGetContentDoesNotThrowExceptionWhenValidArgumentProvided()
     {
-        $pathFormatter = $this->getPathFormatterStub('pathToFile', 'some content');
+        $pathFormatter = $this->mockFile();
 
         $content = oxNew(ModuleTemplateBlockContentReader::class);
         $content->getContent($pathFormatter);
@@ -66,7 +66,7 @@ class ModuleTemplateBlockContentReaderTest extends UnitTestCase
      */
     public function testGetContentReturnContentFromFileWhichWasProvided($filePath, $content)
     {
-        $pathFormatter = $this->getPathFormatterStub($filePath, $content);
+        $pathFormatter = $this->mockFile($filePath, $content);
 
         $contentGetter = oxNew(ModuleTemplateBlockContentReader::class);
 
@@ -79,49 +79,37 @@ class ModuleTemplateBlockContentReaderTest extends UnitTestCase
 
         $filePath = $vfsStreamWrapper->getRootPath() . DIRECTORY_SEPARATOR . 'someFile';
 
-        $exceptionMessage = "Template block file (%s) was not found for module '%s'.";
-        $this->setExpectedException(oxException::class, sprintf($exceptionMessage, $filePath, 'myModuleId'));
-
-        $pathFormatter = $this->getMock(ModuleTemplateBlockPathFormatter::class, ['getPath', 'getModuleId']);
-        $pathFormatter->method('getPath')->willReturn($filePath);
-        $pathFormatter->method('getModuleId')->willReturn('myModuleId');
+        $exceptionMessage = "Template block file (%s) was not found.";
+        $this->setExpectedException(oxException::class, sprintf($exceptionMessage, $filePath));
 
         $content = oxNew(ModuleTemplateBlockContentReader::class);
-        $content->getContent($pathFormatter);
+        $content->getContent($filePath);
     }
 
     public function testGetContentThrowsExceptionWhenFileIsNotReadable()
     {
         $notReadableMode = 000;
-        $vfsStreamWrapper = $this->getVfsStreamWrapper();
-        $filePath = $vfsStreamWrapper->createFile('pathToFile', 'some content');
+        $filePath = $this->mockFile();
         chmod($filePath, $notReadableMode);
 
-        $exceptionMessage = "Template block file (%s) is not readable for module '%s'.";
-        $this->setExpectedException(oxException::class, sprintf($exceptionMessage, $filePath, 'myModuleId'));
-
-        $pathFormatter = $this->getMock(ModuleTemplateBlockPathFormatter::class, ['getPath', 'getModuleId']);
-        $pathFormatter->method('getPath')->willReturn($filePath);
-        $pathFormatter->method('getModuleId')->willReturn('myModuleId');
+        $exceptionMessage = "Template block file (%s) is not readable.";
+        $this->setExpectedException(oxException::class, sprintf($exceptionMessage, $filePath));
 
         $content = oxNew(ModuleTemplateBlockContentReader::class);
-        $content->getContent($pathFormatter);
+        $content->getContent($filePath);
     }
 
     /**
-     * @param $filePath
-     * @param $content
+     * @param string $filePath
+     * @param string $content that will be in that file
      *
-     * @return MockObject
+     * @return string full path
      */
-    private function getPathFormatterStub($filePath, $content)
+    private function mockFile($filePath = 'pathToFile', $content = 'someContent')
     {
         $vfsStreamWrapper = $this->getVfsStreamWrapper();
         $filePath = $vfsStreamWrapper->createFile($filePath, $content);
 
-        $pathFormatter = $this->getMock(ModuleTemplateBlockPathFormatter::class, ['getPath']);
-        $pathFormatter->method('getPath')->willReturn($filePath);
-
-        return $pathFormatter;
+        return $filePath;
     }
 }
