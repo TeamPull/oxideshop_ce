@@ -209,6 +209,14 @@ class Delivery extends \oxI18n
     }
 
     /**
+    *  
+    *  @return bool
+    */
+    public function isConditionIncludingFreeProducts(){
+        return (bool) $this->oxdelivery__oxinlcudefree->value;
+    }
+
+    /**
      * Returns amount (total net price/weight/volume/Amount) on which delivery price is applied
      *
      * @param oxBasketItem $oBasketItem basket item object
@@ -231,8 +239,10 @@ class Delivery extends \oxI18n
             if ($this->_blFreeShipping !== false) {
                 $this->_blFreeShipping = true;
             }
+            if (! $this->isConditionIncludingFreeProducts()){
+               return;
+            }
         } else {
-
             $this->_blFreeShipping = false;
             if ($oBasketItem->getPrice()) {
                 $this->_dPrice += $oBasketItem->getPrice()->getPrice();
