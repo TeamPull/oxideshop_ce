@@ -76,6 +76,14 @@
                      [{oxinputhelp ident="HELP_DELIVERY_MAIN_CONDITION"}]
                 </td>
             </tr>
+                <td class="edittext" height="30">
+                    [{oxmultilang ident="DELIVERY_MAIN_INCLUDEFREE"}] 
+                </td> 
+                <td class="edittext" height="30">
+                    <input class="edittext" type="checkbox" name="editval[oxdelivery__oxincludefree]" value='1' [{if $edit->oxdelivery__oxicludefree->value == 1}]checked[{/if}] [{$readonly}]>
+                [{oxinputhelp ident="HELP_DELIVERY_MAIN_INCLUDEFREE"}]
+                </td>
+            </tr>
             <!--tr>
                 <td class="edittext" height="30">
                 [{oxmultilang ident="DELIVERY_MAIN_CONDITION"}]
