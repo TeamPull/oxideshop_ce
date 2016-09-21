@@ -631,7 +631,7 @@ class DeliveryTest extends \OxidTestCase
 
         $oDelivery = oxNew('oxDelivery');
         $oDelivery->oxdelivery__oxdeltype = new oxField('p', oxField::T_RAW);
-        $oDelivery->oxdelivery__oxincludefree = new oxField(1, oxField::T_RAW);
+        $oDelivery->oxdelivery__oxincludefree = new oxField(true);
          
 
         $this->assertEquals(512, $oDelivery->getDeliveryAmount($this->_oBasketItem));
