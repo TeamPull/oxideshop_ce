@@ -240,7 +240,7 @@ class Delivery extends \oxI18n
                 $this->_blFreeShipping = true;
             }
             if (! $this->isConditionIncludingFreeProducts()){
-               return;
+               return $dAmount;
             }
         } else {
             $this->_blFreeShipping = false;
