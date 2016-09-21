@@ -602,6 +602,7 @@ class DeliveryTest extends \OxidTestCase
 
     /*
      * Testing getDeliveryAmount() - free shipping delivery
+     * Delivery condition should ignore the free shipping product
      */
     public function test_getDeliveryAmountFreeShipping()
     {
@@ -610,7 +611,7 @@ class DeliveryTest extends \OxidTestCase
         $oDelivery = oxNew('oxDelivery');
         $oDelivery->oxdelivery__oxdeltype = new oxField('p', oxField::T_RAW);
 
-        $this->assertEquals(512, $oDelivery->getDeliveryAmount($this->_oBasketItem));
+        $this->assertEquals(0, $oDelivery->getDeliveryAmount($this->_oBasketItem));
         $this->assertTrue($oDelivery->getblFreeShipping());
 
         // non free shipping
@@ -620,6 +621,23 @@ class DeliveryTest extends \OxidTestCase
         $this->assertFalse($oDelivery->getblFreeShipping());
 
     }
+
+    /*
+     * Testing getDeliveryAmount() - free shipping delivery
+     */
+    public function test_getDeliveryAmountFreeShippingIncludingFreeShippingProducts()
+    {
+        $this->_oBasketItem->getArticle()->oxarticles__oxfreeshipping = new oxField(true);
+
+        $oDelivery = oxNew('oxDelivery');
+        $oDelivery->oxdelivery__oxdeltype = new oxField('p', oxField::T_RAW);
+        $oDelivery->oxdelivery__oxincludefree = new oxField(1, oxField::T_RAW);
+         
+
+        $this->assertEquals(512, $oDelivery->getDeliveryAmount($this->_oBasketItem));
+        $this->assertTrue($oDelivery->getblFreeShipping());
+    }
+
 
     /*
      * #1115: Usability Problem during checkout with products without stock
@@ -635,7 +653,7 @@ class DeliveryTest extends \OxidTestCase
         $oDelivery = oxNew('oxDelivery');
         $oDelivery->oxdelivery__oxdeltype = new oxField('p');
 
-        $this->assertEquals(512, $oDelivery->getDeliveryAmount($this->_oBasketItem));
+        $this->assertEquals(0, $oDelivery->getDeliveryAmount($this->_oBasketItem));
         $this->assertTrue($oDelivery->getblFreeShipping());
 
         // non free shiping
