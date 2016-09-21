@@ -627,11 +627,11 @@ class DeliveryTest extends \OxidTestCase
      */
     public function test_getDeliveryAmountFreeShippingIncludingFreeShippingProducts()
     {
-        $this->_oBasketItem->getArticle()->oxarticles__oxfreeshipping = new oxField(false);
+        $this->_oBasketItem->getArticle()->oxarticles__oxfreeshipping = new oxField(true);
 
         $oDelivery = oxNew('oxDelivery');
         $oDelivery->oxdelivery__oxdeltype = new oxField('p', oxField::T_RAW);
-        $oDelivery->oxdelivery__oxincludefree = new oxField(true);
+        $oDelivery->oxdelivery__oxincludefree = new oxField(1, oxField::T_RAW);
          
 
         $this->assertEquals(512, $oDelivery->getDeliveryAmount($this->_oBasketItem));
