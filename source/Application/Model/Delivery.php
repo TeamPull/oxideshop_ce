@@ -212,8 +212,8 @@ class Delivery extends \oxI18n
     *  
     *  @return bool
     */
-    public function isConditionIncludingFreeProducts(){
-        return (bool) $this->oxdelivery__oxinlcudefree->value;
+    public function isConditionIncludingFreeProducts(){      
+        return (bool) $this->oxdelivery__oxincludefree->value; 
     }
 
     /**
