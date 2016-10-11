@@ -76,10 +76,8 @@ class Module extends \oxSuperCfg
     {
         $sModulePath = $this->getModuleFullPath($sModuleId);
         $sMetadataPath = $sModulePath . "/metadata.php";
-
-        if ($sModulePath && file_exists($sMetadataPath) && is_readable($sMetadataPath)) {
-            $aModule = array();
-            include $sMetadataPath;
+        $aModule = $this->readMetaData($sMetadataPath);
+        if ($aModule) {                
             $this->_aModule = $aModule;
             $this->_blRegistered = true;
             $this->_blMetadata = true;
@@ -89,6 +87,30 @@ class Module extends \oxSuperCfg
         }
 
         return false;
+    }
+
+    private function readMetaData($metadataPath){
+        if ($metadataPath && file_exists($metadataPath) && is_readable($metadataPath)) {
+            $aModule = array();
+            include $sMetadataPath;
+            $this->fixEncoding($aModule);
+        }
+        retrun $aModule;
+    }
+
+    private function fixEncoding(& $value){
+        if (is_array($value)){
+            foreach($value as &$valueItem){
+                $this->fixEncoding($valueItem);
+            }
+        } elseif (is_string($value)){
+            $fromEncoding = mb_detect_encoding($value, 'ISO-8859-15, UTF-8', true);
+            $config = $this->getConfig();
+            $targetEncoding = $config->isUtf() ? 'UTF-8':'ISO-8859-15';
+            if ($fromEncoding != $targetEncoding){
+                $value = iconv($fromEncoding, $targetEncoding, $value);
+            }
+        }
     }
 
     /**
