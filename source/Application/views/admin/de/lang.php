@@ -625,6 +625,7 @@ $aLang = array(
 'DELIVERY_MAIN_CONDITION'                                  => 'Bedingung',
 'DELIVERY_MAIN_ORDER'                                      => 'Reihenfolge der Regelberechnung',
 'DELIVERY_MAIN_FINALIZE'                                   => 'Keine weiteren Regeln nach dieser berechnen',
+'DELIVERY_MAIN_INCLUDEFREE'                                => 'Versandkostenfreie Artikel mitzählen',
 'DELIVERY_MAIN_PARAM'                                      => 'Kostenart',
 'DELIVERY_MAIN_PRICE'                                      => 'Preis Auf-/Abschlag',
 'DELIVERY_MAIN_AND'                                        => 'und',

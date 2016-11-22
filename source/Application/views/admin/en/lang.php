@@ -629,6 +629,7 @@ $aLang = array(
 'DELIVERY_MAIN_CONDITION'                                  => 'Condition',
 'DELIVERY_MAIN_ORDER'                                      => 'Order of Rule Processing',
 'DELIVERY_MAIN_FINALIZE'                                   => 'Don\'t calculate further Rules if this Rule matches',
+'DELIVERY_MAIN_INCLUDEFREE'                                => 'Condition includes free shipping products',
 'DELIVERY_MAIN_PARAM'                                      => 'Payment Method',
 'DELIVERY_MAIN_PRICE'                                      => 'Price Surcharge/Discount',
 'DELIVERY_MAIN_AND'                                        => 'and',
