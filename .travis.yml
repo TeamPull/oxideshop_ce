@@ -50,5 +50,5 @@ before_script:
   - SHOP_PATH='source' SHOP_TESTS_PATH='tests' MODULES_PATH='' composer install
 
 script:
-  - vendor/bin/runtests-selenium
+  - xvfb-run --server-args="-screen 0, 1024x768x24" ${TRAVIS_BUILD_DIR}/start_selenium.sh
   - vendor/bin/runtests
