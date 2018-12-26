@@ -41,10 +41,8 @@ before_script:
   - sudo sed -e 's|utf8_unicode_ci|latin1_general_ci|g; s|utf8|latin1|g' --in-place /etc/mysql/my.cnf
   - sudo service mysql restart
 
-  # replace configuration values in config.inc.php
   - cp source/config.inc.php.dist source/config.inc.php
-  - sed -i 's|<dbHost>|localhost|; s|<dbName>|oxideshop|; s|<dbUser>|root|; s|<dbPwd>||; s|<sShopURL>|http://localhost|; s|<sShopDir>|'$TRAVIS_BUILD_DIR'/source|; s|<sCompileDir>|'$TRAVIS_BUILD_DIR'/source/tmp|; s|$this->iDebug = 0|$this->iDebug = 1|' source/config.inc.php
-  - sed -i "s|\$this->edition = ''|\$this->edition = 'CE'|" source/config.inc.php
+  - sh ./.travis.before_script.sh
 
   # set permissions to log directory
   - chmod -R 777 "${TRAVIS_BUILD_DIR}/source/log"
