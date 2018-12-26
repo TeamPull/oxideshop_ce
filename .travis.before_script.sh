@@ -15,5 +15,5 @@ sudo dpkg -i firefox-mozilla-build_31.0-0ubuntu1_amd64.deb
 #sudo apt-get install -f -y
 ls -al ${TRAVIS_BUILD_DIR}/start_selenium.sh
 ls -al /usr/bin/xvfb-run
-apt install x11vnc xfce4-session
+sudo apt install x11vnc xfce4-session
 xvfb-run --server-args="-screen 0, 1024x768x24" ${TRAVIS_BUILD_DIR}/start_selenium.sh
