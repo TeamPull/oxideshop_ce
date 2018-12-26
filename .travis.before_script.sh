@@ -16,4 +16,4 @@ sudo dpkg -i firefox-mozilla-build_31.0-0ubuntu1_amd64.deb
 ls -al ${TRAVIS_BUILD_DIR}/start_selenium.sh
 ls -al /usr/bin/xvfb-run
 
-xvfb-run --server-args="-screen 0, 1024x768x24" ${TRAVIS_BUILD_DIR}/start_selenium.sh
+
