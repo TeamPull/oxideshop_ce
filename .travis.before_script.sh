@@ -1,9 +1,9 @@
 
 if [ ! -f selenium-server-standalone-2.47.1.jar ]; then
-  wget https://raw.githubusercontent.com/OXID-eSales/oxvm_assets/master/selenium-server-standalone-2.47.1.jar
+  wget -nv https://raw.githubusercontent.com/OXID-eSales/oxvm_assets/master/selenium-server-standalone-2.47.1.jar
 fi
 if [ ! -f firefox-mozilla-build_31.0-0ubuntu1_amd64.deb ]; then
-  wget https://raw.githubusercontent.com/OXID-eSales/oxvm_assets/master/firefox-mozilla-build_31.0-0ubuntu1_amd64.deb
+  wget -nv https://raw.githubusercontent.com/OXID-eSales/oxvm_assets/master/firefox-mozilla-build_31.0-0ubuntu1_amd64.deb
 fi
 
 # replace configuration values in config.inc.php
@@ -15,5 +15,5 @@ sudo dpkg -i firefox-mozilla-build_31.0-0ubuntu1_amd64.deb
 #sudo apt-get install -f -y
 ls -al ${TRAVIS_BUILD_DIR}/start_selenium.sh
 ls -al /usr/bin/xvfb-run
-sudo apt install x11vnc xfce4-session
+sudo apt install -y x11vnc xfce4-session
 xvfb-run --server-args="-screen 0, 1024x768x24" ${TRAVIS_BUILD_DIR}/start_selenium.sh
